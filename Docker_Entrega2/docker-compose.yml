@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  fastapi-app:
+    build: .
+    container_name: fastapi-container
+    ports:
+      - "8989:8989"
+    volumes:
+      - .:/code
+      - logs:/code/logs
+      - models_volume:/models  # Volumen compartido con Jupyter
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: always
+
+  jupyter:
+    image: jupyter/scipy-notebook
+    container_name: jupyter-container
+    ports:
+      - "8888:8888"
+    volumes:
+      - models_volume:/home/jovyan/models  # Jupyter guarda modelos aquí
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+
+volumes:
+  logs:
+  models_volume:  # Volumen compartido entre Jupyter y la API

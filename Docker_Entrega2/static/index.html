@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de Clúster</title>
+</head>
+<body>
+    <h1>Predicción de Clúster</h1>
+    <form id="prediction-form">
+        <label for="culmen_length">Culmen Length (mm):</label>
+        <input type="number" step="any" id="culmen_length" name="culmen_length" required><br>
+        
+        <label for="culmen_depth">Culmen Depth (mm):</label>
+        <input type="number" step="any" id="culmen_depth" name="culmen_depth" required><br>
+        
+        <label for="flipper_length">Flipper Length (mm):</label>
+        <input type="number" step="any" id="flipper_length" name="flipper_length" required><br>
+        
+        <label for="body_mass">Body Mass (g):</label>
+        <input type="number" step="any" id="body_mass" name="body_mass" required><br>
+        
+        <label for="delta_15">Delta 15 N (o/oo):</label>
+        <input type="number" step="any" id="delta_15" name="delta_15" required><br>
+        
+        <label for="delta_13">Delta 13 C (o/oo):</label>
+        <input type="number" step="any" id="delta_13" name="delta_13" required><br>
+        
+        <button type="submit">Generar Predicción</button>
+    </form>
+    
+    <h2>Resultado:</h2>
+    <p id="result"></p>
+    
+    <script>
+        document.getElementById("prediction-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            
+            const response = await fetch("/predict/", {
+                method: "POST",
+                body: formData
+            });
+            
+            const data = await response.json();
+            document.getElementById("result").innerText = data.error ? `Error: ${data.error}` : `Cluster: ${data.cluster}`;
+        });
+    </script>
+</body>
+</html>
